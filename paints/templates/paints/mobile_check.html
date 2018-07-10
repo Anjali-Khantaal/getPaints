@@ -1,0 +1,71 @@
+{% extends 'paints/base.html' %}
+{% block title %}Buy Paintings Online | Free Global Shipping | Create Account{% endblock %}
+<style type="text/css">
+    
+</style>
+{% block content %}
+<style type="text/css">
+    a {
+        text-decoration: none;
+        color: #000;
+    }
+    a:hover {
+        text-decoration: none;
+    }
+    .btn-success {
+        background: #069674 !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <div class="text-center lhd-logo-wrapper">
+            <a href="/{% if on_success_param %}{{on_success_param}}{% endif %}"></a>
+        </div>
+        <div class="authentication-form-div">
+            <br><br><br>
+            <h3 class="text-center">Reset Password</h3>
+            <hr/>
+            <form id="mobile_check">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Enter Registered Mobile Number</label>
+                    <input class="form-control" pattern="[789][0-9]{9}" id="login_mobile" name="mobile" required/>
+                </div>
+                <div class="g-recaptcha" data-sitekey="6LeGd2IUAAAAACLR0FrzHdK-UCZ6S84P3qFGXQuh"></div>
+                <br>
+                <div class="form-group text-center">
+                    <input type="submit" value="Continue" class="btn btn-success" />
+                </div>
+            </form>
+            <div class="text-center">
+                <span class="text-center mobile-check-error-message">This is error message</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // for validating if mobile number is registered or not
+    $('.mobile-check-error-message').hide();
+    $('#mobile_check').submit(function(e) {
+        e.preventDefault();
+        var url = "{% url 'paints:validate_mobile_check' %}";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $("#mobile_check").serialize(), //serializes the form's element
+            success: function(data)
+            {
+                if (data["status"] != 'ok') {
+                    $('.mobile-check-error-message').text(data["message"]);
+                    $('.mobile-check-error-message').show();
+                } else {
+                    window.location.replace("{% url 'paints:forgot_password_reset' %}{% if on_success_param %}?onSuccessPage={{on_success_param}}{% endif %}");
+                }
+            }
+        })
+
+    })
+</script>
+{% endblock %}

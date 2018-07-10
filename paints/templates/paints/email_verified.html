@@ -1,0 +1,11 @@
+{% extends 'paints/base.html' %}
+
+{% block title %}Buy Paintings Online | Free Global Shipping{% endblock %}
+
+{% block content %}
+	{% if verification_complete %}
+	<h2>Hi, {{user_name}} <br>Your email has been verified. Please enjoy our services</h2>
+	{% else %}
+	<h2>Hi,<br>We couldn't verify your email possibily because your token is incorrect.</h2>
+	{% endif %}
+{% endblock %}

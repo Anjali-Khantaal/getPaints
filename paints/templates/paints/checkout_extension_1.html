@@ -1,0 +1,143 @@
+<!-- Main row of the page -->
+<div class="row">
+	<!-- The left hand side stuff -->
+	<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+		<h5 class="cart-details-heading text-center">Items in your cart</h5>
+		{% for key, value in user_cart.items %}
+		<!-- row inside row -->
+		<div class="row item-row">
+			<div class="col-sm-4">
+				<img src="{{value.image_small}}" alt="{{value.painting_name}}" style="width: 80px;">
+			</div>
+			<div class="col-sm-7">
+				<h6>{{value.painting_name|title}}</h6>
+				<h6><small>{{value.painting_size}} | {{value.artist_name|title}}</small></h6>
+				<h5>
+					{% if value.painting_discounted_cost == 0 %}
+					<small>₹ {{value.painting_cost}}</small>
+					{% else %}
+					<small><strike>₹ {{value.painting_cost}}</strike> ₹ {{value.painting_discounted_cost}}</small>
+					{% endif %}
+				</h5>
+			</div>
+			<div class="col-sm-1">
+				<button class="btn-sm btn-cancel" onclick="remove_from_cart({{key}})">&times;</button>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	<!-- The right hand side stuff -->
+	<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+		<div class="apply-coupon text-center">
+			<h5 class="coupon-heading text-center">Have a coupon?</h5>
+			<div class="row coupon-apply-content">
+				<div class="col-sm-8">
+					<input type="text" class="form-control" placeholder="Enter Code" id="enter_code" />
+				</div>
+				<div class="col-sm-4">
+					<button class="btn btn-success btn-sm" id="apply_coupon_btn">Apply</button>
+				</div>
+			</div>
+		</div>
+		<hr>
+		<div class="order-details">
+			<h5 class="order-details-heading text-center">Order Details</h5>
+			<div class="order-details-body">
+				<div class="saving">
+					<div class="row">
+						<div class="col-sm-6">
+							<span class="name">Saving</span>
+						</div>
+						<div class="col-sm-6">
+							<span class="cost">₹ {{cart_saving}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="subtotal">
+					<div class="row">
+						<div class="col-sm-6">
+							<span class="name">Subtotal</span>
+						</div>
+						<div class="col-sm-6">
+							<span class="cost">₹ {{cart_total}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="discount">
+					<div class="row">
+						<div class="col-sm-6">
+							<span class="name">Discount</span>
+						</div>
+						<div class="col-sm-6">
+							<span class="cost">₹ 0.0</span>
+						</div>
+					</div>
+				</div>
+				<div class="shipping">
+					<div class="row">
+						<div class="col-sm-6">
+							<span class="name">Shipping</span>
+						</div>
+						<div class="col-sm-6">
+							<span class="cost">₹ 0.0</span>
+						</div>
+					</div>
+				</div>
+				<br>
+			</div>	
+		</div>
+		<div class="total">
+			<div class="row">
+				<div class="col-sm-6">
+					<span class="name"><b>Total</b></span>
+				</div>
+				<div class="col-sm-6">
+					<span class="cost"><b>₹ {{cart_total}}</b></span>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="col-sm-6">
+				<a href="{% url 'paints:index' %}"><small><< Continue Shopping</small></a>
+			</div>
+			<div class="col-sm-6 text-right">
+				<!-- Button to Open the Modal -->
+				{% if "user_details" in request.session %}
+				<button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-success" id="proceed">Proceed</button>
+				{% else %}
+				<a href="{% url 'paints:login' %}?onSuccessPage=checkout&login=True"><button type="button" class="btn btn-success" id="proceed_to_login">Proceed</button></a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+<script type="text/javascript">
+	function remove_from_cart(painting_code) {
+		
+		csrf_token = "{{csrf_token}}";
+		url = "{% url 'paints:remove_from_cart' %}";
+		$.post(url, {'csrfmiddlewaretoken': csrf_token, 'painting_code': painting_code}, function(data) {
+				console.log(data);
+				if (data['status'] == 'ok') {
+					console.log(parseInt('{{cart_length}}') - 1);
+					if (parseInt('{{cart_length}}') - 1) {
+						$(".checkout-content").html(data["data"]["html"]);
+					}else {
+						window.location.replace("/");
+					}
+				}
+				var x = document.getElementById('pop_up');
+				$("#pop_up").text(data["message"]);
+				x.className = "show";
+				setTimeout(function() {
+					x.className = x.className.replace("show","");
+				}, 3000);
+			}
+		);
+	}
+</script>

@@ -1,0 +1,82 @@
+{% extends "./base.html" %}
+
+{% block title %}Buy Paintings Online | Free Global Shipping | Login{% endblock %}
+
+{% block content %}
+<style type="text/css">
+    a {
+        text-decoration: none;
+        color: #000;
+    }
+    a:hover {
+        color: #1a53ff !important;
+    }
+    .btn-success {
+        background: #069674 !important;
+    }
+</style>
+
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <div class="text-center lhd-logo-wrapper">
+            <a href="/{% if on_success_param %}{{on_success_param}}{% endif %}"></a>
+        </div>
+        <div class="authentication-form-div">
+            <br><br><br>
+            <h3 class="text-center">Login</h3>
+            <hr/>
+            <form id="login_form" action="" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input class="form-control" pattern="[789][0-9]{9}" id="login_mobile" name="mobile" required/>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input class="form-control" name="password" type="password" required/>
+                    <a href="{% url 'paints:mobile_check' %}" id="fp_validate">Forgot password?</a>
+                </div>
+                <div class="g-recaptcha" data-sitekey="6LeGd2IUAAAAACLR0FrzHdK-UCZ6S84P3qFGXQuh"></div>
+                <br>
+                <div class="form-group text-center">
+                    <input type="submit" value="Login" class="btn btn-success" />
+                </div>
+            </form>
+            <div class="text-center">
+                <span class="text-center login-error-message">This is error message</span>
+            </div>
+            {% if password_changed == "True" %}
+            Your password has been successfully changed!
+            {% endif %}
+            {% if login == "True" %}
+            <div class="text-center">Please login first!</div>
+            {% endif %}
+            <hr/>
+            <h6 class="text-center"><small><a href="{% url 'paints:signup' %}">Not a member? Signup here.</a></small></h6>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.login-error-message').hide();
+    $('#login_form').submit(function(e) {
+        e.preventDefault();
+        console.log($('#login_form').serialize())
+        var url = "{% url 'paints:validate_login' %}";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: $('#login_form').serialize(),
+            success: function(data)
+            {
+                if (data["status"] != "ok") {
+                    $('.login-error-message').text(data["message"]);
+                    $('.login-error-message').show();
+                } else {
+                    window.location.replace("{% if on_success_param %}?onSuccessPage={{on_success_param}}{% endif %}");
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

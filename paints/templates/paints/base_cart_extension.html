@@ -1,0 +1,5 @@
+{% if request.path == '/checkout' %}
+	<a href="/checkout" style="display: none;" class="nav-link"><i class="fas fa-shopping-cart"></i><span id="number_in_cart">{{request.session.cart|length}}</span></a>
+{% else %}
+	<a href="{% if not request.session.cart|length %} # {% else %} /checkout {% endif %}" {% if not request.session.cart|length %} data-toggle="tooltip" title="Please add items to the cart!" {% endif %} class="nav-link"><i class="fas fa-shopping-cart"></i>&nbsp; &nbsp;<span id="number_in_cart">{{request.session.cart|length}}</span></a>
+{% endif %}

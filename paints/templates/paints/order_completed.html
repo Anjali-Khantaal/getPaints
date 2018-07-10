@@ -1,0 +1,32 @@
+{% extends 'paints/base.html' %}
+
+{% block title %}Buy Paintings Online | Free Global Shipping | Order Placed{% endblock %}
+
+{% block content %}
+<style type="text/css">
+	.thank-you {
+		margin: 30px;
+		font-family: 'Lato', sans-serif;
+	}
+
+	h3 {
+		margin: 25px;
+		margin-bottom: 15vh;
+	}
+</style>
+	<h1 class="text-center thank-you">Thank You</h1>
+	<h3 class="text-center">for shopping with us!</h3>
+	<h4 class="text-center">"You will be redirected to home page in <span id="countdown_timer"></span>"</h4>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	var timeleft = 0;
+	var countdown_timer_function = setInterval(function(){
+  		document.getElementById("countdown_timer").innerHTML = 5 - timeleft++;
+  		if(timeleft >= 5)
+    		window.location.replace("/");
+	},1000);
+</script>
+
+{% endblock %}

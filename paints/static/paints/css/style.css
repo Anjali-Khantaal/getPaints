@@ -1,0 +1,97 @@
+/* Make the image fully responsive */
+.carousel-inner img {
+	width: 100%;
+	height: 100%;
+}
+
+/*Adding styles to the cards*/
+div.polaroid {
+	width: 100%;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	text-align: center;
+	cursor: pointer;
+}
+/*adding border to the categories heading*/
+.red-bottom {
+	border-bottom: 3px solid red;
+	display: inline-block;
+	width: 150px;
+	clear: both;
+	position: relative;
+	top: -15px;
+}
+/*footer styles added with flexbox has been commited out*/
+.footer {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	background: #242729;
+	text-transform: uppercase;
+	color: whitesmoke;
+	font-family: 'Lato', sans-serif;
+}
+/*.footer-container {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+}
+.back-top-container {
+	width: 100%;
+	height: 9vh;
+	background-color: #202020;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	font-size: 4vh;
+	font-size: 1em;
+	border-bottom: 1px solid white;
+}
+
+.about-paints {
+	width: 100%;
+	margin-left: 4vw;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: flex-start;
+	margin-top: 4vh;
+	font-size: 2.1vh;
+}
+.help-related, .get-paints, .misc, .big-icons {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: space-around;
+
+}
+.big-icons {
+	flex-direction: row;
+	justify-content: space-between;
+	color: whitesmoke;
+}
+.icon {
+	margin: 5vw;
+	margin-left: 0;
+}*/
+
+
+/*view more button*/
+.view-more {
+	cursor: pointer;
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: none;
+}
+.about-paints a{
+	color: whitesmoke;
+}

@@ -1,0 +1,122 @@
+{% extends './base.html' %}
+{% block title %}Buy Paintings Online | Free Global Shipping | Category-3{% endblock %}
+
+{% block content %}
+<style type="text/css">
+	.row-head {
+		text-align: center;
+		justify-content: center;
+		/*margin-left: 3vw;
+		margin-right: 3vw;*/
+	}
+	.row-title {
+		text-align: center;
+		justify-content: center;
+		padding-bottom: 3vw;
+		padding-top: 6vw;
+	}
+	.row-body {
+		margin-left: 3vw;
+		margin-right: 3vw;
+	}
+	.polaroid {
+		margin-bottom: 3vh;
+	}
+	
+	.image-card {
+		transition-duration: 0.5s;
+	}
+	.image-card:hover {
+		transform: scale(1.05);
+	}
+	
+	/*adding border to the categories heading*/
+	.red-bottom {
+		border-bottom: 3px solid red;
+		display: inline-block;
+		clear: both;
+		position: relative;
+		top: -15px;
+	}
+	.btn-success {
+		background: #069674 !important;
+		padding: 12px;
+		margin-bottom: 2px;
+		border-radius: 8px
+	}
+	.glyph-on-image {
+	   position: relative;
+	}
+	.glyph-icon {
+	   float: left;
+	   position: absolute;
+	   right: 0px;
+	   top: 0px;
+	   z-index: 1000;
+	   padding-right: 5px;
+	   font-size: 2vw;
+	}
+</style>
+	
+<!-- For the paintaings in the display -->
+	<div class="row row-head">
+		<div class="col-sm-12 col-md-6">
+			<h5 class="row-title">{{category_name|upper}} <br><span class="red-bottom"></span></h5>
+		</div>
+	</div>
+	<div class="row row-body">
+		{% for painting in paintings %}
+		<div class="col-sm-12 col-md-4 col-lg-4">
+			<div class="polaroid">
+				<div class="glyph-on-image">
+					<div class="glyph-icon"><i class="heart fa fa-heart-o" style="color: red;"></i></div>
+					<img class="image-card" src="{{painting.painting_image_small}}" alt="{{painting.painting_name}}" style="width:100%">
+				</div>
+				<div class="container">
+					<h6 class="text-left" style="float: left; padding-top: 0.5vh;">{{painting.painting_name}}</h6>
+					<h5 class="text-right">
+						{% if painting.painting_discounted_cost == 0 %}
+							<small style="">₹ {{painting.painting_cost}}</small>
+						{% else %}
+							<small class="cost-with-discount"><strike>₹ {{painting.painting_cost}}</strike> ₹ {{painting.painting_discounted_cost}}</small>
+						{% endif %}
+					</h5>
+					<h6 class="text-center" style="margin-bottom: 10px;"><small>{{painting.painting_size}} | {{painting.artist_name|title}}</small></h6>
+					<div id="painting_desc_tab{{painting.painting_code}}">
+						{% if painting.painting_code not in request.session.cart.keys %}
+							<button style="" class="btn btn-success btn-sm" id="buy_now_btn" onclick="add_to_cart('{{painting.painting_code}}')">Add to Cart</button>
+						{% else %}
+							<small>Added to Cart</small>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+	//Adding item to the cart
+	function add_to_cart(painting_code) {
+		csrf_token = "{{csrf_token}}";
+		url = "{% url 'paints:add_to_cart' %}";
+		$.post(url, {'csrfmiddlewaretoken': csrf_token, 'painting_code': painting_code}, function(data) {
+				console.log(data);
+				if (data['status'] == 'ok') {
+					$('#number_in_cart').text(parseInt($('#number_in_cart').text()) + 1);
+					//Changing button with text
+					$("#painting_desc_tab" + painting_code).html("<small>Added to Cart</small>");
+				}
+				var x = document.getElementById('pop_up');
+				$("#pop_up").text(data["message"]);
+				x.className = "show";
+				setTimeout(function() {
+					x.className = x.className.replace("show","");
+				}, 3000);
+		});
+	}
+
+</script>
+{% endblock %}

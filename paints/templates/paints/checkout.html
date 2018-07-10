@@ -1,0 +1,94 @@
+{% extends './base.html' %}
+{% block title %}Buy Paintings Online | Free Global Shipping | Checkout{% endblock %}
+
+{% block content %}
+<style type="text/css">
+	
+	.btn-cancel {
+		background: none;
+		border: none;
+		color: #ccc;
+	}
+
+	.item-row {
+		margin: 20px;
+		border: 1px solid #ddd;
+		border-radius: 10px;
+		padding: 5px;
+	}
+
+	.apply-coupon {
+		margin-top: 20px;
+	}
+
+	.coupon-heading {
+		background: #F48024;
+		margin-bottom: 0px;
+		padding: 10px;
+		font-size: 0.9em;
+		color: white;
+		border: 1px solid #F48024;
+		border-radius: 10px 10px 0px 0px;
+	}
+
+	.coupon-apply-content {
+		margin-top: 5px;
+	}
+
+	.order-details-heading {
+		background: #F48024;
+		padding: 10px;
+		margin-bottom: 0px;
+		font-size: 0.9em;
+		color: white;
+		border: 1px solid #F48024;
+		border-radius: 10px 10px 0px 0px;
+	}
+
+	.order-details-body {
+		background: #fff8df;
+		padding: 20px 20px 0px 20px;
+	}
+
+	.total {
+		background: #f9eab1;
+		font-size: 1.2em;
+		padding: 10px 20px 10px 20px;
+	}
+
+	.cart-details-heading {
+		background: #F48024;
+		margin: 20px;
+		padding: 10px;
+		margin-bottom: 0px;
+		font-size: 0.9em;
+		color: white;
+		border: 1px solid #F48024;
+		border-radius: 10px 10px 0px 0px;
+	}
+	
+	.btn-success {
+		background: #069674 !important;
+
+	}
+
+	#apply_coupon_btn {
+		padding: 7px;
+		width: 100%;
+		background: #0095ff !important;
+	}
+	.modal-header {
+		background: #f77e3a;
+		color: white;
+	}
+</style>
+
+<div class="checkout-content">
+	{% include './checkout_extension_1.html' %}
+</div>
+
+
+{% endblock %}
+{% block js %}
+	
+{% endblock %}

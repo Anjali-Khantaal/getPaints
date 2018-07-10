@@ -1,0 +1,159 @@
+{% extends 'paints/base.html' %}
+
+{% block title %}Buy Paintings Online | Free Global Shipping{% endblock %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'paints/css/style.css'%}">
+
+{% block content %}
+<style type="text/css">
+	.image-card {
+		transition-duration: 0.5s;
+	}
+	.image-card:hover {
+		transform: scale(1.05);
+	}
+	.btn-success {
+		background: #069674 !important;
+		padding: 12px;
+		margin-bottom: 2px;
+		border-radius: 8px
+	}
+	.glyph-on-image {
+	   position: relative;
+	}
+	.glyph-icon {
+	   float: left;
+	   position: absolute;
+	   right: 0px;
+	   top: 0px;
+	   z-index: 1000;
+	   padding-right: 5px;
+	   font-size: 2vw;
+	}
+</style>
+
+<br>
+
+<div class="container">
+	<div id="myCarousel" class="carousel slide" data-ride="carousel">
+		<!-- Indicators -->
+		<ul class="carousel-indicators">
+			{% for carousel in carousels %}
+			<li data-target="#myCarousel" data-slide-to="{{forloop.counter0}}" {% if forloop.counter0 == 0 %} class="active" {% endif %}></li>
+			{% endfor %}
+		</ul>
+	  
+		<!-- The slideshow -->
+		<div class="carousel-inner">
+			{% for carousel in carousels %}
+			<div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}">
+			<img src="{{carousel.image_link}}" alt="{{carousel.image_title}}" width="1100" height="500">
+			</div>
+			{% endfor %}
+		</div>
+	  
+		<!-- Left and right controls -->
+		<a class="carousel-control-prev" href="#myCarousel" data-slide="prev">
+			<span class="carousel-control-prev-icon"></span>
+		</a>
+		<a class="carousel-control-next" href="#myCarousel" data-slide="next">
+			<span class="carousel-control-next-icon"></span>
+		</a>
+	</div>
+</div>
+
+<br>
+<h4 class="text-center">CATEGORIES<br><span class="red-bottom"></span></h4>
+
+<div class="container">
+	{% for key, value in paintings.items %}
+		<div class="row">
+			<div class="col-sm-12 col-md-6"><h5 class="index-pg-heading">{{key|title}}</h5></div>
+			<div class="col-sm-12 col-md-6">
+				{% if value|length > 3 %}
+				<div class="text-right">
+					<h6 class="view-more"><a href="/category/{{key}}/">View More</a></h6>
+				</div>
+				
+				{% endif %}
+			</div>
+		</div>
+		<div class="row">
+		{% for painting in value|slice:":3" %}
+			<div class="col-sm-12 col-md-4 col-lg-4">
+				<div class="polaroid">
+					<div class="glyph-on-image">
+						<div class="glyph-icon">
+							<i class="heart fa fa-heart-o" style="color: red;"></i>
+						</div>
+						<img class="image-card" src="{{painting.image_small}}" alt="{{painting.painting_name}}" style="width:100%">
+					</div>
+					<div class="container">
+						<h6 class="text-left" style="float: left; padding-top: 0.5vh;">{{painting.painting_name}}</h6>
+						<h5 class="text-right">
+						{% if painting.painting_discounted_cost == 0 %}
+							<small style="">₹ {{painting.painting_cost}}</small>
+						{% else %}
+							<small class="cost-with-discount"><strike>₹ {{painting.painting_cost}}</strike> ₹ {{painting.painting_discounted_cost}}</small>
+						{% endif %}
+						</h5>
+						<h6 class="text-center"><small>{{painting.painting_size}} | {{painting.artist_name|title}}</small></h6>
+						<div style="" id="painting_desc_tab{{painting.painting_code}}" class="">
+							{% if painting.painting_code not in request.session.cart.keys%}
+								<button class="btn btn-success btn-sm" id="buy_now_btn" onclick="add_to_cart('{{painting.painting_code}}')">Add to Cart</button>
+							{% else %}
+								<small class="text-center">Added to Cart</small>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		</div>
+		<br>
+	{% endfor %}
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+	// Activate Carousel
+	$("#myCarousel").carousel();
+
+	// Enable Carousel Indicators
+	$(".item").click(function(){
+		$("#myCarousel").carousel(1);
+	});
+
+	// Enable Carousel Controls
+	$(".carousel-control-prev").click(function(){
+		$("#myCarousel").carousel("prev");
+	});
+
+	// Adding item to cart
+	function add_to_cart(painting_code) {
+		csrf_token = "{{csrf_token}}";
+		url = "{% url 'paints:add_to_cart' %}";				
+		$.post(url, {'csrfmiddlewaretoken': csrf_token, 'painting_code': painting_code}, function(data) {
+				console.log(data);
+				if (data['status'] == 'ok') {
+					//Changing button with text
+					$("#painting_desc_tab" + painting_code).html("<small>Added to Cart</small>");
+				}
+				var x = document.getElementById('pop_up');
+				$("#pop_up").text(data["message"]);
+				$("#base_cart_extension").html(data["data"]["html_content"]);
+				x.className = "show";
+				setTimeout(function() {
+					x.className = x.className.replace("show","");
+				}, 3000);
+		});
+	}
+	// changing glyphicon color hearth-waala
+	$(".heart.fa").click(function() {
+  		$(this).toggleClass("fa-heart fa-heart-o");
+	});
+
+</script>
+{% endblock %}
