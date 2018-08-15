@@ -316,6 +316,7 @@ def web_complete_signup(request):
 					email_verification_token=encoded_str,
 					token_generated_at=timezone.now(),
 					is_blocked=False)
+				print storage_item
 			else:
 				return JsonResponse({"status": "failed",
 					"message": "OTP Expired! Please go to previous step or startover.",
@@ -343,6 +344,7 @@ def web_complete_signup(request):
 
 	#sending email for verification
 	request.session["user_details"] = data
+	print data
 	print settings.SENDGRID_API_KEY
 	sg = sendgrid.SendGridAPIClient(apikey=settings.SENDGRID_API_KEY)
 	from_email = Email("anjalikhantaal06@gmail.com")
